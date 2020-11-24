@@ -1,32 +1,49 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
     <router-view/>
   </div>
 </template>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+	@import '~bootstrap/dist/css/bootstrap.css'; /* bootstrap */
+	@import './assets/scss/variables.scss'; /* CSS variables used */
+	#app{
+		height: 100%;
+		width: 100%;
+		max-width: 1800px;
+		margin: 0px auto 0px auto;
+		font-family: 'Work Sans', sans-serif;
+		background: var(--pageColor);
+	}
 </style>
+
+<script type="text/javascript">
+	export default {
+		data(){
+			return {
+				window: {
+		            width: 0,
+		            height: 0
+		        },
+			}
+		},
+		created() {
+	        window.addEventListener('resize', this.handleResize);
+	        // Makes sure <html> and <body> have a height of 100% always 
+	        document.querySelector('html').style.height = '100%';
+	        document.querySelector('body').style.height = '100%';
+	        document.querySelector('body').style.margin = '0px'; //body should have no default margin
+	        this.handleResize();
+	    },
+	    destroyed() {
+	        window.removeEventListener('resize', this.handleResize);
+	    },
+	    methods: {
+	    	// Make resizing of the webpage sleek
+	        handleResize() {
+	            this.window.width = window.innerWidth;
+	            this.window.height = window.innerHeight;
+	        },
+	    },
+	}
+</script>
