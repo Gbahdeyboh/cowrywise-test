@@ -1,31 +1,43 @@
 <template>
-    <div class="grid p-5" id="imageContainer">
-        <div 
-            v-for="image in images" 
-            :key="image.id" 
-            class="item"
-            :style="`grid-row-end: span ${ image.spanSize }`"
-        >
-            <div class="imageOverlay">{{ image.user.first_name }} {{ image.user.last_name }}</div>
-            <img 
-                :src='image.urls.full' 
-                class='images' 
-                alt='Unsplash Image here' 
-            />
+    <div class="" id="imageContainer">
+        <div class="grid p-5" v-show="!loading">
+            <div 
+                v-for="image in images" 
+                :key="image.id" 
+                class="item"
+                :style="`grid-row-end: span ${ image.spanSize }`"
+            >
+                <div class="imageOverlay pl-3 pb-4">
+                    <div class="photographerName">{{ image.user.first_name }} {{ image.user.last_name }}</div>
+                    <div class="photographerLocation">{{ image.user.location }}</div>
+                </div>
+                <img 
+                    :src='image.urls.full' 
+                    class='images' 
+                    :alt='image.description' 
+                    @load="loaded"
+                />
+            </div>
         </div>
 
-        <!-- <div 
-            v-for="(image, index) in images" 
-            :key="index" 
-            class="item"
-        >
-            <div class="imageOverlay">Text</div>
-            <img :src='image' class='images' alt='Unsplash Image here' />
-        </div> -->
+        <div v-show="loading" class="grid p-5">
+            <div 
+                v-for="image in 6" 
+                :key="image" 
+                class="itemLoader"
+                :style="`grid-row-end: span ${ calculateSpan() }`"
+            >
+                <div class="skeleton">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
 
-<style scoped>
+<style type="scss" scoped>
     #imageContainer{
         min-height: calc(100vh - 350px);
         position: relative;
@@ -40,13 +52,12 @@
         grid-column-gap: 40px;
         column-gap: 40px;
         grid-template-columns: repeat(auto-fill, minmax(250px,1fr));
-        /* grid-auto-rows: 40px; */
         text-rendering: optimizeLegibility;
     }
 
-    .item {
+    .item, .itemLoader {    
         background-color: #ffffff;
-        height: 100% !important;
+        min-height: 300px;
         border-radius: 8px;
         transition: all .5s;
         position: relative;
@@ -73,7 +84,61 @@
         background:linear-gradient(rgba(0,0,0,.04), rgba(0,0,0,.2), rgba(0,0,0,.2), rgba(0,0,0,.95));
         border-radius: 10px;
         color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
     }
+
+
+    .photographerName{
+        font-size: 16px;
+    }
+
+    .photographerLocation{
+        font-size: 12px;
+    }
+
+    .skeleton {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 0px 0px 1em 1em;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        bottom: 0px;
+        left: 0px;
+        height: 100%;
+        width: 100%;
+        background: #f5f5f5;
+        background: linear-gradient(#f5f5f5, 100%, transparent 0);
+        border-radius: 10px;
+        animation: shine-lines 1.6s infinite linear;
+    }
+    .skeleton .line {
+        float: left;
+        width: 140px;
+        height: 10px;
+        margin-top: 12px;
+        border-radius: 2px;
+        background-image: linear-gradient(90deg, #ddd 0px, #e8e8e8 40px, #ddd 80px);
+        background-size: 600px;
+        animation: shine-lines 1.6s infinite linear;
+    }
+
+    .skeleton .line:nth-child(even){
+        width: 70px;
+    }
+
+    @keyframes shine-lines {
+        0% {
+            background-position: -100px;
+        }
+        40%, 100% {
+            background-position: 140px;
+        }
+    }
+
 </style>
 
 <script>
@@ -83,8 +148,9 @@ export default {
     data(){
         return {
             name: 'Section',
-            images: ''
-            // [
+            loading: true,
+            images: '',
+            // images: [
             //     'https://www.andybarefoot.com/codepen/images/dogs/dog1.jpg',
             //     'https://www.andybarefoot.com/codepen/images/dogs/dog3.jpg',
             //     'https://www.andybarefoot.com/codepen/images/dogs/dog4.jpg',
@@ -96,19 +162,13 @@ export default {
         }
     },
     methods: {
-        resizeGridItem(item){
-            let random = Math.floor(Math.random() * 4 ) + 4;
-            item.style.gridRowEnd = "span " + random;
-        },
-        resizeAllGridItems(){
-            const allItems = document.getElementsByClassName("item");
-            for(let x = 0; x < allItems.length; x++){
-                this.resizeGridItem(allItems[x]);
-            }
-        },
         calculateSpan(){
-            let random = Math.floor(Math.random() * 4 ) + 4;
+            let random = Math.ceil(Math.random() * 3 ) + 3;
             return random;
+        },
+        loaded(){
+            // Wait for the src to load the images beforre displaying them
+            this.loading = false;
         }
     },
     async created(){
@@ -127,7 +187,6 @@ export default {
         });
         
         this.images = images;
-        // this.resizeAllGridItems();
 
         console.log("The fetched images are =>", images)
     },
