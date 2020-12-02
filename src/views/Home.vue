@@ -1,6 +1,7 @@
 <template>
     <div>
         <Header />
+        <ImageSection />
     </div>
 </template>
 
@@ -10,10 +11,12 @@
 
 <script>
 import Header from '@/components/Header.vue'
+import ImageSection from '@/components/ImageSection.vue'
 export default {
     name: 'Homepage',
     components: {
         Header,
+        ImageSection,
     },
     data(){
         return {
