@@ -41,7 +41,7 @@
     #imageContainer{
         min-height: calc(100vh - 350px);
         position: relative;
-        bottom: 150px;
+        bottom: 120px;
         margin: auto;
         max-width: 980px;
     }
@@ -145,6 +145,13 @@
 export default {
     /* eslint-disable no-unused-vars */
     name: 'imageSection',
+    props: {
+        query: {
+            type: String,
+            default: '',
+            required: false,
+        }
+    },
     data(){
         return {
             name: 'Section',
@@ -169,26 +176,38 @@ export default {
         loaded(){
             // Wait for the src to load the images beforre displaying them
             this.loading = false;
+
+            console.log("Image successfully loaded")
+        },
+        async loadFromUnsplash(){
+            this.loading = true;
+
+            const unsplashURI = `https://api.unsplash.com/search/photos?query=${ this.query || 'Nigeria' }`
+
+            const imagesData = await this.$axios.get(unsplashURI, {
+                headers: {
+                    Authorization: `Client-ID ${process.env.VUE_APP_UNSPLASH_ACCESS_KEY}`
+                }
+            })
+
+            const images = imagesData.data.results;
+
+            images.map(image => {
+                image.spanSize = this.calculateSpan();
+            });
+            
+            this.images = images;
+
+            console.log("The fetched images are =>", images)
         }
     },
-    async created(){
-        const unsplashURI = 'https://api.unsplash.com/search/photos?query=Nigeria'
-        console.log("Token is => ", process.env.VUE_APP_UNSPLASH_ACCESS_KEY);
-        const imagesData = await this.$axios.get(unsplashURI, {
-            headers: {
-                Authorization: `Client-ID ${process.env.VUE_APP_UNSPLASH_ACCESS_KEY}`
-            }
-        })
-
-        const images = imagesData.data.results;
-
-        images.map(image => {
-            image.spanSize = this.calculateSpan();
-        });
-        
-        this.images = images;
-
-        console.log("The fetched images are =>", images)
+    created(){
+        this.loadFromUnsplash();  
     },
+    watch: {
+        query(newVal, oldVal){
+            this.loadFromUnsplash();
+        }
+    }
 }
 </script>

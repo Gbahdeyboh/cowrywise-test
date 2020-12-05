@@ -1,7 +1,7 @@
 <template>
     <div>
-        <Header />
-        <ImageSection />
+        <Header v-on:search="searchFor"/>
+        <ImageSection :query="searchQuery"/>
     </div>
 </template>
 
@@ -20,7 +20,14 @@ export default {
     },
     data(){
         return {
-            name: 'Bello Gbadebo'
+            name: 'Bello Gbadebo',
+            searchQuery: ''
+        }
+    },
+    methods: {
+        searchFor(val){
+            console.log("Searching for => ", val);
+            this.searchQuery = val;
         }
     }
 }
