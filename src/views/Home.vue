@@ -17,7 +17,7 @@
     </div>
 </template>
 
-<style type="scss" scoped>
+<style lang="scss" scoped>
     #singleImageBody{
         position: fixed;
         top: 0px;
@@ -50,34 +50,33 @@
         background: lightgrey;
         border-top-right-radius: 15px;
         border-top-left-radius: 15px;
+        img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            border-top-right-radius: 15px;
+            border-top-left-radius: 15px;
+        }
     }
 
-    #singleImageDiv > img {
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
-        border-top-right-radius: 15px;
-        border-top-left-radius: 15px;
-    }
 
     #singleImageDescriptionDiv{
         height: 20%;
         background: white;
         border-bottom-left-radius: 15px;
         border-bottom-right-radius: 15px;
-    }
+        #photographer {
+            font-size: 24px;
+            color: #2a3d5b;
+            font-weight: 600;
+        }
 
-    #singleImageDescriptionDiv > #photographer {
-        font-size: 24px;
-        color: #2a3d5b;
-        font-weight: 600;
-    }
-
-    #singleImageDescriptionDiv > #location {
-        font-size: 14px;
-        font-weight: 600;
-        color: #2a3d5b;
-        opacity: 0.8;
+        #location {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2a3d5b;
+            opacity: 0.8;
+        }
     }
     
     #closeModal{
