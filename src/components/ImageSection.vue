@@ -1,11 +1,12 @@
 <template>
     <div class="" id="imageContainer">
         <div class="grid p-5" v-show="!loading">
-            <div 
-                v-for="image in images" 
+            <div
+                v-for="(image, index) in images" 
                 :key="image.id" 
                 class="item"
                 :style="`grid-row-end: span ${ image.spanSize }`"
+                @click="showSingleImage(index)"
             >
                 <div class="imageOverlay pl-3 pb-4">
                     <div class="photographerName">{{ image.user.first_name }} {{ image.user.last_name }}</div>
@@ -33,7 +34,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 </template>
 
@@ -197,8 +197,20 @@ export default {
             });
             
             this.images = images;
+        },
+        showSingleImage(index){
+            // find Image with index
+            const selectedImageData = this.images[index];
+            const url = selectedImageData.urls.full;
+            const location = selectedImageData.user.location || selectedImageData.alt_description;
+            const photographer = `${ selectedImageData.user.first_name } ${ selectedImageData.user.last_name }`;
 
-            console.log("The fetched images are =>", images)
+            this.$emit('displayModal', {
+                url,
+                location,
+                photographer,
+            })
+            console.log("selected image is => ", selectedImageData);
         }
     },
     created(){
